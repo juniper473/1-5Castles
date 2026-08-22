@@ -24,12 +24,14 @@ const runBridesmaids = require('./bridesmaids.js');
 const runParties = require('./parties.js');
 const runApartmentAndGifts = require('./apartment-gifts.js');
 const runDuelFP = require('./duel-fp');
+const runClaimRewards = require('./claim-BPrewards.js');
 
 
 
 const scripts = [
 
   { name: 'Burn Energy', fn: runBurnEnergy, alwaysRun: true },
+  { name: 'Claim Duel Rewards', fn: runClaimRewards, alwaysRun: true },
 
   { name: 'Fashion Magazine', fn: runFashionMagazine, envKey: 'LP_FASHION_MAGAZINE_URL' },
 
