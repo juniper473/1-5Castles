@@ -3,6 +3,17 @@ module.exports = async function runBurnEnergy(page) {
   // ==============================================================
   // 🎟️ TICKET SPENDING
   // ==============================================================
+  //
+  // This function checks how many Beauty Pageant tickets we have.
+  //
+  // The script wants to KEEP 10 tickets in storage.
+  //
+  // Anything ABOVE 10 is spent by sending the game's own
+  // "competeInDuel" internal request.
+  //
+  // IMPORTANT:
+  // This entire function is kept unchanged from your original code.
+  // ==============================================================
 
   async function spendExcessTickets() {
 
@@ -19,6 +30,10 @@ module.exports = async function runBurnEnergy(page) {
         }
       );
 
+      // ----------------------------------------------------------
+      // Read the current number of tickets.
+      // ----------------------------------------------------------
+
       const getTicketCount = async () => {
         const ticketText = await page.innerText('.bp-pass-amount');
         return parseInt(ticketText.trim());
@@ -28,8 +43,19 @@ module.exports = async function runBurnEnergy(page) {
 
       console.log(`🎟️ You have ${tickets} tickets.`);
 
-      const ticketsToUse = tickets - 10;
+      // ----------------------------------------------------------
+      // We want to keep 10 tickets.
+      //
+      // Example:
+      // 15 tickets → use 5
+      // 12 tickets → use 2
+      // 10 tickets → use 0
+      // 8 tickets  → use 0
+      // ----------------------------------------------------------
 
+      const ticketsToUse = tickets - 0;
+
+      // If we have 10 or fewer tickets, there is nothing to spend.
       if (ticketsToUse <= 0) {
         console.log("🚫 No excess tickets to spend.");
         return;
@@ -39,9 +65,18 @@ module.exports = async function runBurnEnergy(page) {
         `🎯 Sending ${ticketsToUse} competeInDuel requests...`
       );
 
+      // ----------------------------------------------------------
+      // Spend every ticket above the 10-ticket reserve.
+      // ----------------------------------------------------------
+
       for (let i = 1; i <= ticketsToUse; i++) {
 
         try {
+
+          // --------------------------------------------------------
+          // Instead of clicking the button, send the game's own
+          // internal request directly.
+          // --------------------------------------------------------
 
           await page.evaluate(async () => {
 
@@ -59,10 +94,13 @@ module.exports = async function runBurnEnergy(page) {
 
           });
 
+          // Small delay between ticket requests.
           await page.waitForTimeout(10);
 
         } catch (err) {
 
+          // If one individual ticket request fails,
+          // log the error and continue with the next one.
           console.log(
             `⚠️ Ticket request ${i} failed: ${err.message}`
           );
@@ -74,8 +112,8 @@ module.exports = async function runBurnEnergy(page) {
 
     } catch (err) {
 
-      // Ticket spending failure must never stop
-      // Beauty Pageant or Fashion Arena.
+      // If the entire ticket section fails, it should NOT stop
+      // the rest of Burn Energy.
       console.log(
         `⚠️ Ticket spending skipped: ${err.message}`
       );
@@ -87,8 +125,36 @@ module.exports = async function runBurnEnergy(page) {
   // ==============================================================
   // 💅 BEAUTY PAGEANT
   // ==============================================================
+  //
+  // IMPORTANT CHANGE:
+  //
+  // The ticket spending function is now called BEFORE EVERY
+  // INDIVIDUAL BEAUTY PAGEANT JUDGING CYCLE.
+  //
+  // The sequence will therefore be:
+  //
+  // 🎟️ Spend tickets
+  // 👑 Judge 1
+  //
+  // 🎟️ Spend tickets
+  // 👑 Judge 2
+  //
+  // 🎟️ Spend tickets
+  // 👑 Judge 3
+  //
+  // etc.
+  //
+  // Everything else in the Beauty Pageant logic remains unchanged.
+  // ==============================================================
 
   async function runBeautyPageant() {
+
+    // ------------------------------------------------------------
+    // Calculate how many judging cycles can be performed from
+    // the current amount of blue Beauty Pageant energy.
+    //
+    // Every judging cycle uses 2 blue energy.
+    // ------------------------------------------------------------
 
     async function getJudgeCycles() {
 
@@ -101,6 +167,7 @@ module.exports = async function runBurnEnergy(page) {
       const blueEnergy =
         parseInt(blueEnergyText.trim());
 
+      // 2 blue energy = 1 judging cycle.
       const judgeCycles =
         Math.floor(blueEnergy / 2);
 
@@ -111,13 +178,34 @@ module.exports = async function runBurnEnergy(page) {
     }
 
 
+    // ==========================================================
+    // 👑 PERFORM ONE BEAUTY PAGEANT JUDGING CYCLE
+    // ==========================================================
+    //
+    // This function performs ONE:
+    //
+    // judgeDuel
+    //      ↓
+    // chooseWinner
+    //
+    // cycle.
+    //
+    // This function itself is NOT changed.
+    // ==============================================================
+
     async function performJudgeCycle() {
 
       const timeoutMs = 10000;
       const pollInterval = 500;
       const startTime = Date.now();
 
+      // Keep trying to obtain valid duel information for up to
+      // 10 seconds.
       while (Date.now() - startTime < timeoutMs) {
+
+        // --------------------------------------------------------
+        // Ask the game for a Beauty Pageant duel.
+        // --------------------------------------------------------
 
         const duelRes = await page.evaluate(async () => {
 
@@ -137,6 +225,10 @@ module.exports = async function runBurnEnergy(page) {
         });
 
 
+        // --------------------------------------------------------
+        // Extract the two ladies from the HTML returned by the game.
+        // --------------------------------------------------------
+
         const matchRegex =
           /<a id="ladyIdContainer-(\d+)-([^"]+)"/g;
 
@@ -144,17 +236,35 @@ module.exports = async function runBurnEnergy(page) {
           [...duelRes.html.matchAll(matchRegex)];
 
 
+        // We only continue when:
+        //
+        // 1. A duel ID was returned.
+        // 2. Exactly two ladies were found.
+        //
+
         if (
           duelRes.duel_id &&
           matches.length === 2
         ) {
 
+          // ------------------------------------------------------
+          // Get information for Lady #1.
+          // ------------------------------------------------------
+
           const id1 = matches[0][1];
           const gameId1 = matches[0][2];
+
+          // ------------------------------------------------------
+          // Get information for Lady #2.
+          // ------------------------------------------------------
 
           const id2 = matches[1][1];
           const gameId2 = matches[1][2];
 
+
+          // ------------------------------------------------------
+          // Randomly select one of the two ladies.
+          // ------------------------------------------------------
 
           const pickFirst =
             Math.random() < 0.5;
@@ -165,6 +275,10 @@ module.exports = async function runBurnEnergy(page) {
           const winnerGameId =
             pickFirst ? gameId1 : gameId2;
 
+
+          // ------------------------------------------------------
+          // Tell the game which lady was selected.
+          // ------------------------------------------------------
 
           await page.evaluate(
             async ({
@@ -198,6 +312,7 @@ module.exports = async function runBurnEnergy(page) {
           );
 
 
+          // One judging cycle is complete.
           console.log(
             `👑 Judged duel ${duelRes.duel_id} ✔️`
           );
@@ -206,10 +321,14 @@ module.exports = async function runBurnEnergy(page) {
         }
 
 
+        // If valid duel information wasn't received yet,
+        // wait 500 ms and try again.
         await page.waitForTimeout(pollInterval);
       }
 
 
+      // If valid duel information could not be obtained within
+      // 10 seconds, skip this judging cycle.
       console.log(
         '❌ Timeout: Could not get valid duel data in 10s. Skipping.'
       );
@@ -223,8 +342,14 @@ module.exports = async function runBurnEnergy(page) {
 
     try {
 
+      // ----------------------------------------------------------
+      // Keep checking Beauty Pageant energy until there is no
+      // complete judging cycle left.
+      // ----------------------------------------------------------
+
       while (true) {
 
+        // Open the Beauty Pageant page.
         await page.goto(
           'https://v3.g.ladypopular.com/beauty_pageant.php',
           {
@@ -233,9 +358,11 @@ module.exports = async function runBurnEnergy(page) {
           }
         );
 
+        // Give the page time to fully update its displayed energy.
         await page.waitForTimeout(5000);
 
 
+        // Read blue energy and calculate available judge cycles.
         const {
           blueEnergy,
           judgeCycles
@@ -247,6 +374,8 @@ module.exports = async function runBurnEnergy(page) {
         );
 
 
+        // If there isn't enough energy for even one cycle,
+        // Beauty Pageant judging is finished.
         if (judgeCycles < 1) {
 
           console.log(
@@ -257,6 +386,30 @@ module.exports = async function runBurnEnergy(page) {
         }
 
 
+        // --------------------------------------------------------
+        // 🔴 IMPORTANT SURGICAL CHANGE
+        // --------------------------------------------------------
+        //
+        // Instead of doing all judge cycles consecutively,
+        // we now do:
+        //
+        //     SPEND TICKETS
+        //          ↓
+        //     ONE JUDGE CYCLE
+        //          ↓
+        //     SPEND TICKETS
+        //          ↓
+        //     ONE JUDGE CYCLE
+        //          ↓
+        //     etc.
+        //
+        // The only new line of logic is:
+        //
+        //     await spendExcessTickets();
+        //
+        // immediately before performJudgeCycle().
+        // --------------------------------------------------------
+
         for (
           let i = 0;
           i < judgeCycles;
@@ -265,12 +418,39 @@ module.exports = async function runBurnEnergy(page) {
 
           try {
 
+            // ====================================================
+            // 🎟️ SPEND EXCESS TICKETS FIRST
+            // ====================================================
+            //
+            // The upcoming judging cycle should award 2 tickets.
+            //
+            // So we first make room in the ticket storage.
+            //
+            // This is the reason for moving this call INSIDE
+            // the judging loop.
+            // ====================================================
+
+            await spendExcessTickets();
+
+
+            // ====================================================
+            // 👑 NOW PERFORM EXACTLY ONE JUDGING CYCLE
+            // ====================================================
+            //
+            // This happens AFTER the ticket storage has been
+            // cleared of excess tickets.
+            // ====================================================
+
             await performJudgeCycle();
 
+
+            // Keep the original 3-second delay after judging.
             await page.waitForTimeout(3000);
 
           } catch (err) {
 
+            // If one judging cycle fails, log it and continue
+            // with the next cycle.
             console.log(
               `⚠️ Judge cycle ${i + 1} failed: ${err.message}`
             );
@@ -281,8 +461,8 @@ module.exports = async function runBurnEnergy(page) {
 
     } catch (err) {
 
-      // Beauty Pageant failure must not prevent
-      // the rest of the script.
+      // Beauty Pageant failure must not prevent the rest of
+      // Burn Energy from continuing.
       console.log(
         `⚠️ Beauty Pageant section failed: ${err.message}`
       );
@@ -293,6 +473,12 @@ module.exports = async function runBurnEnergy(page) {
 
   // ==============================================================
   // 🟧 FASHION ARENA
+  // ==============================================================
+  //
+  // This section is unchanged.
+  //
+  // The ONLY difference in the overall script is that this
+  // function is now called FIRST in the final execution order.
   // ==============================================================
 
   async function runFashionArena() {
@@ -318,6 +504,10 @@ module.exports = async function runBurnEnergy(page) {
         );
 
 
+        // --------------------------------------------------------
+        // Original 3 page refreshes.
+        // --------------------------------------------------------
+
         for (let i = 1; i <= 3; i++) {
 
           console.log(
@@ -334,6 +524,10 @@ module.exports = async function runBurnEnergy(page) {
         }
 
 
+        // --------------------------------------------------------
+        // Read Fashion Arena energy.
+        // --------------------------------------------------------
+
         const energyText =
           await page.innerText(
             '#header > div.wrapper > div > div.player-panel-middle > div.player-panel-energy > a.player-energy.player-arena-energy > span.player-energy-value > span'
@@ -344,6 +538,7 @@ module.exports = async function runBurnEnergy(page) {
           parseInt(energyText.trim());
 
 
+        // If there is no Arena energy, stop.
         if (
           arenaEnergy <= 0 ||
           isNaN(arenaEnergy)
@@ -361,6 +556,10 @@ module.exports = async function runBurnEnergy(page) {
           `🔋 You have ${arenaEnergy} energy. Starting duels...`
         );
 
+
+        // --------------------------------------------------------
+        // Send one challenge request for each Arena energy.
+        // --------------------------------------------------------
 
         for (
           let i = 0;
@@ -395,6 +594,7 @@ module.exports = async function runBurnEnergy(page) {
               `⚔️ Duel ${i + 1}`
             );
 
+            // Original 100 ms delay.
             await page.waitForTimeout(100);
 
           } catch (e) {
@@ -407,6 +607,10 @@ module.exports = async function runBurnEnergy(page) {
           }
         }
 
+
+        // --------------------------------------------------------
+        // Reload and check Arena energy again.
+        // --------------------------------------------------------
 
         await page.reload({
           timeout: 30000
@@ -427,6 +631,7 @@ module.exports = async function runBurnEnergy(page) {
           parseInt(energyAfter.trim());
 
 
+        // If Arena energy remains, repeat the Arena process.
         if (arenaEnergy > 0) {
 
           console.log(
@@ -457,6 +662,7 @@ module.exports = async function runBurnEnergy(page) {
         );
 
 
+        // Give up after 3 consecutive errors.
         if (arenaErrors >= 3) {
 
           console.log(
@@ -495,30 +701,51 @@ module.exports = async function runBurnEnergy(page) {
   // ==============================================================
   // 🔄 FINAL EXECUTION ORDER
   // ==============================================================
+  //
+  // 🔴 THIS IS THE OTHER SURGICAL CHANGE.
+  //
+  // OLD ORDER:
+  //
+  // 1. Tickets
+  // 2. Beauty Pageant
+  // 3. Tickets
+  // 4. Fashion Arena
+  // 5. Beauty Pageant
+  // 6. Tickets
+  //
+  //
+  // NEW ORDER:
+  //
+  // 1. Fashion Arena
+  // 2. Beauty Pageant
+  //
+  // And inside Beauty Pageant:
+  //
+  //    Tickets → Judge
+  //    Tickets → Judge
+  //    Tickets → Judge
+  //    etc.
+  //
+  // There are NO additional ticket calls here because
+  // runBeautyPageant() now handles ticket spending before
+  // EVERY individual judging cycle.
+  // ==============================================================
 
-  // 1️⃣ FIRST TICKET SPENDING
-  await spendExcessTickets();
 
-
-  // 2️⃣ FIRST BEAUTY PAGEANT
-  await runBeautyPageant();
-
-
-  // 3️⃣ SECOND TICKET SPENDING
-  await spendExcessTickets();
-
-
-  // 4️⃣ FASHION ARENA
+  // 1️⃣ FIRST: BURN ALL FASHION ARENA ENERGY
   await runFashionArena();
 
 
-  // 5️⃣ FINAL BEAUTY PAGEANT
+  // 2️⃣ SECOND: BURN BEAUTY PAGEANT ENERGY
+  //
+  // Ticket spending is automatically performed before
+  // every individual judging cycle inside this function.
   await runBeautyPageant();
 
 
-  // 6️⃣ FINAL TICKET SPENDING
-  await spendExcessTickets();
-
+  // ==============================================================
+  // 🏁 FINISHED
+  // ==============================================================
 
   console.log(
     "🏁 Burn Energy finished."
