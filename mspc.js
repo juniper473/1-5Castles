@@ -35,7 +35,7 @@ const scripts = [
   { name: 'Burn Energy', fn: runBurnEnergy, alwaysRun: true },
   { name: 'Claim Duel Rewards', fn: runClaimRewards, alwaysRun: true },
 
-  { name: 'Fashion Magazine', fn: runFashionMagazine, envKey: 'LP_FASHION_MAGAZINE_URL' },
+  /*{ name: 'Fashion Magazine', fn: runFashionMagazine, envKey: 'LP_FASHION_MAGAZINE_URL' },
 
   { name: 'Tele Event', fn: runTeleportEvent, envKey: 'LP_TELEPORT_URL' },
 
@@ -49,7 +49,7 @@ const scripts = [
 
   { name: 'Memory Event', fn: runMemoryEvent, envKey: 'LP_MEMORY_URL' },
 
-  { name: 'Furniture Script', fn: runFurnitureScript, alwaysRun: false },
+  { name: 'Furniture Script', fn: runFurnitureScript, alwaysRun: false }, */
 
   { name: 'Daily Tasks', fn: runDailyTasks, alwaysRun: true },
 
