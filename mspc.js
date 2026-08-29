@@ -23,6 +23,7 @@ const runPetTraining = require('./pet-train.js');
 const runBridesmaids = require('./bridesmaids.js');
 const runParties = require('./parties.js');
 const runApartment = require('./apartment.js');
+const runTeleport = require('./teleport-activation.js');
 const runGifts = require('./gifts-activation.js');
 const runDuelFP = require('./duel-fp');
 const runClaimRewards = require('./claim-BPrewards.js');
@@ -61,8 +62,9 @@ const scripts = [
   { name: 'Bridesmaids Tasks', fn: runBridesmaids, alwaysRun: false },
 
   { name: 'Apartment Income', fn: runApartment, alwaysRun: true },
-  { name: 'Gifts Flashback', fn: runGifts, alwaysRun: true },
+  { name: 'Gifts Flashback', fn: runGifts, alwaysRun: false },
   { name: 'Raise stats', fn: runDuelFP, alwaysRun: true },
+  { name: 'Teleport Activation', fn: runTeleport, alwaysRun: true },
 
 ];
 
