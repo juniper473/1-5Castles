@@ -28,9 +28,16 @@ module.exports = async function runTeleport(page) {
   }
 
 
-  const activeFlashbackEvents = await page.locator(
+  // ==============================================================
+  // DETECT CURRENTLY ACTIVE FLASHBACK EVENT
+  // ==============================================================
+
+  const activeFlashbackElement = page.locator(
     '#header-events-container .header-event-banner[data-is_flashback="1"]'
-  ).count();
+  ).first();
+
+
+  const activeFlashbackEvents = await activeFlashbackElement.count();
 
 
   // --------------------------------------------------------------
@@ -40,7 +47,29 @@ module.exports = async function runTeleport(page) {
 
   if (activeFlashbackEvents > 0) {
 
-    console.log('🚀 Flashback event already active. Skipping.');
+    const activeFlashbackId = await activeFlashbackElement.getAttribute(
+      'data-id'
+    );
+
+    const activeFlashbackTitle = await activeFlashbackElement.locator(
+      '.item-title'
+    ).innerText();
+
+
+    // Store the currently active flashback event.
+    const activeFlashbackEvent = {
+      id: activeFlashbackId,
+      title: activeFlashbackTitle.trim()
+    };
+
+
+    console.log('🚀 Flashback event already active.');
+
+    console.log(
+      `📌 Active flashback: ${activeFlashbackEvent.title} (ID ${activeFlashbackEvent.id})`
+    );
+
+    console.log('🚀 Skipping Teleport activation.');
 
     return;
 
