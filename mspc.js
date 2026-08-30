@@ -63,8 +63,8 @@ const scripts = [
 
   { name: 'Apartment Income', fn: runApartment, alwaysRun: true },
 /*  { name: 'Gifts Flashback', fn: runGifts, alwaysRun: false }, */
-  { name: 'Raise stats', fn: runDuelFP, alwaysRun: true },
   { name: 'Teleport Activation', fn: runTeleport, alwaysRun: true },
+  { name: 'Raise stats', fn: runDuelFP, alwaysRun: true },
 
 ];
 
