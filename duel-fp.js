@@ -377,9 +377,9 @@ module.exports = async function runDuelFP(page) {
     `🏋️ Step 5: Sending trainStats for ${STAT_LABELS[chosenKey]} (${chosenKey}) x5...`
   );
 
-  for (let i = 1; i <= 5; i++) {
+  for (let i = 1; i <= 1; i++) {
 
-    console.log(`➡️ trainStats request ${i}/5 for ${chosenKey}...`);
+    console.log(`➡️ trainStats request ${i}/1 for ${chosenKey}...`);
 
     try {
 
@@ -401,11 +401,11 @@ module.exports = async function runDuelFP(page) {
       const responseText = await response.text();
 
       console.log(
-        `📡 trainStats (${i}/5) HTTP status: ${response.status()}`
+        `📡 trainStats (${i}/1) HTTP status: ${response.status()}`
       );
 
       console.log(
-        `📨 trainStats (${i}/5) response: ${responseText}`
+        `📨 trainStats (${i}/1) response: ${responseText}`
       );
 
       if (!response.ok()) {
@@ -423,13 +423,13 @@ module.exports = async function runDuelFP(page) {
         if (data.status === 1) {
 
           console.log(
-            `✅ trainStats (${i}/5) succeeded: ${data.message || ''}`
+            `✅ trainStats (${i}/1) succeeded: ${data.message || ''}`
           );
 
         } else {
 
           console.log(
-            `⚠️ trainStats (${i}/5) returned status: ${data.status}`
+            `⚠️ trainStats (${i}/1) returned status: ${data.status}`
           );
 
         }
@@ -437,7 +437,7 @@ module.exports = async function runDuelFP(page) {
       } catch {
 
         console.log(
-          `⚠️ Could not parse trainStats (${i}/5) response as JSON.`
+          `⚠️ Could not parse trainStats (${i}/1) response as JSON.`
         );
 
       }
@@ -445,7 +445,7 @@ module.exports = async function runDuelFP(page) {
     } catch (error) {
 
       console.log(
-        `❌ trainStats request ${i}/5 failed: ${error.message}`
+        `❌ trainStats request ${i}/1 failed: ${error.message}`
       );
 
       // One failed rep shouldn't stop the remaining reps.
