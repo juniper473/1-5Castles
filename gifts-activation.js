@@ -1,5 +1,5 @@
 // ================================================================
-// 🎁 GIFTS FLASHBACK EVENT
+// 🎁 GIFTS FLASHBACK EVENT.
 // ================================================================
 
 module.exports = async function runGifts(page) {
