@@ -11,7 +11,7 @@
 //    is sent.
 // 5. Case 2: if ALL 4 numbers are >= 200 -> pick the stat with the
 //    LOWEST base/practice number (random tie-break if there's a tie),
-//    then send trainStats for that stat 5 times in a row.
+//    then send trainStats for that stat 5 times in a row..
 //
 // Important:
 // - buyFashionPoints always uses fpToBuy=2201.
