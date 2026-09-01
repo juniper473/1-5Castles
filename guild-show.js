@@ -6,7 +6,7 @@ module.exports = async function runGuildShow(page) {
     timeout: 60000
   });
 
-  // Give map time to render
+  // Give map time to render.
   await page.waitForTimeout(3000);
 
   // 1️⃣ Collect pending positions (only ones still visible in DOM)
