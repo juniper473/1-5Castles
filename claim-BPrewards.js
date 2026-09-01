@@ -6,7 +6,7 @@
 //
 // What this script does:
 //
-// 1. Opens the Beauty Pageant page.
+// 1. Opens the Beauty Pageant page..
 // 2. Waits for the page to finish loading.
 // 3. Sends the game's own internal POST request:
 //      /ajax/beauty_pageant.php
