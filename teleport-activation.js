@@ -1,6 +1,6 @@
 // ================================================================
 // 🚀 TELEPORT FLASHBACK EVENT — FULL INTEGRATED SINGLE FLOW
-// Activation (or detection) → Zone Detection → Zone Activation → Playing
+// Activation (or detection) → Zone Detection → Zone Activation → Playing.
 // ================================================================
 
 module.exports = async function runTeleport(page) {
