@@ -35,7 +35,7 @@ const scripts = [
   { name: 'Burn Energy', fn: runBurnEnergy, alwaysRun: true },
   { name: 'Claim Duel Rewards', fn: runClaimRewards, alwaysRun: true },
 
-  /*{ name: 'Fashion Magazine', fn: runFashionMagazine, envKey: 'LP_FASHION_MAGAZINE_URL' },
+  { name: 'Fashion Magazine', fn: runFashionMagazine, envKey: 'LP_FASHION_MAGAZINE_URL' },
 
   { name: 'Tele Event', fn: runTeleportEvent, envKey: 'LP_TELEPORT_URL' },
 
@@ -49,7 +49,7 @@ const scripts = [
 
   { name: 'Memory Event', fn: runMemoryEvent, envKey: 'LP_MEMORY_URL' },
 
-  { name: 'Furniture Script', fn: runFurnitureScript, alwaysRun: false }, */
+  { name: 'Furniture Script', fn: runFurnitureScript, alwaysRun: true }, 
 
   { name: 'Daily Tasks', fn: runDailyTasks, alwaysRun: true },
 
@@ -57,14 +57,14 @@ const scripts = [
 
   { name: 'Guild Show', fn: runGuildShow, alwaysRun: true },
 
- /* { name: 'Pet Training', fn: runPetTraining, alwaysRun: false },
+ { name: 'Pet Training', fn: runPetTraining, alwaysRun: true },
 
-  { name: 'Bridesmaids Tasks', fn: runBridesmaids, alwaysRun: false }, */
+  { name: 'Bridesmaids Tasks', fn: runBridesmaids, alwaysRun: false },
 
   { name: 'Apartment Income', fn: runApartment, alwaysRun: true },
 /*  { name: 'Gifts Flashback', fn: runGifts, alwaysRun: false }, */
   { name: 'Teleport Activation', fn: runTeleport, alwaysRun: true },
-  { name: 'Raise stats', fn: runDuelFP, alwaysRun: true },
+  { name: 'Raise stats', fn: runDuelFP, alwaysRun: false },
 
 ];
 
