@@ -25,7 +25,7 @@ const runParties = require('./parties.js');
 const runApartment = require('./apartment.js');
 const runTeleport = require('./teleport-activation.js');
 const runGifts = require('./gifts-activation.js');
-const runDuelFP = require('./duel-fp');
+const runDuelFP = require('./duel-fp.js');
 const runClaimRewards = require('./claim-BPrewards.js');
 
 
@@ -47,9 +47,7 @@ const scripts = [
 
   { name: 'Parties', fn: runParties, alwaysRun: false },
 
-  { name: 'Memory Event', fn: runMemoryEvent, envKey: 'LP_MEMORY_URL' },
-
-  { name: 'Furniture Script', fn: runFurnitureScript, alwaysRun: true }, */
+  { name: 'Memory Event', fn: runMemoryEvent, envKey: 'LP_MEMORY_URL' }, */
 
   { name: 'Daily Tasks', fn: runDailyTasks, alwaysRun: true },
 
@@ -57,14 +55,16 @@ const scripts = [
 
   { name: 'Guild Show', fn: runGuildShow, alwaysRun: true },
 
- /*{ name: 'Pet Training', fn: runPetTraining, alwaysRun: true },
+ /* { name: 'Pet Training', fn: runPetTraining, alwaysRun: false },
 
-  { name: 'Bridesmaids Tasks', fn: runBridesmaids, alwaysRun: false },*/
+  { name: 'Bridesmaids Tasks', fn: runBridesmaids, alwaysRun: false }, */
 
   { name: 'Apartment Income', fn: runApartment, alwaysRun: true },
-  { name: 'Gifts Flashback', fn: runGifts, alwaysRun: false },
-  /*{ name: 'Teleport Activation', fn: runTeleport, alwaysRun: true },*/
-  { name: 'Raise stats', fn: runDuelFP, alwaysRun: false },
+/*  { name: 'Gifts Flashback', fn: runGifts, alwaysRun: false }, */
+  { name: 'Teleport Activation', fn: runTeleport, alwaysRun: true },
+  { name: 'Furniture Script1', fn: runFurnitureScript, alwaysRun: true },
+  { name: 'Furniture Script2', fn: runFurnitureScript, alwaysRun: true },
+  { name: 'Raise stats', fn: runDuelFP, alwaysRun: true },
 
 ];
 
@@ -80,7 +80,7 @@ async function login(page, account) {
 
   let loginSuccess = false;
 
-  for (let attempt = 1; attempt <= 1; attempt++) {
+  for (let attempt = 1; attempt <= 5; attempt++) {
 
     try {
 

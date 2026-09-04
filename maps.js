@@ -17,11 +17,11 @@ module.exports = async function runMapsEvent(page) {
     '.currency-tries .currency-circle.currency-circle-full',
     circles => circles.length
   );
-  console.log(`🎯 Full tries available: ${fullCircles+1}`);
+  console.log(`🎯 Full tries available: ${fullCircles}`);
 
   let successfulClicks = 0;
 
-  for (let i = 0; i < fullCircles+1; i++) {
+  for (let i = 0; i < fullCircles; i++) {
     const emeraldText = await page.$eval('#player-emeralds', el => el.textContent.trim());
     const emeralds = parseInt(emeraldText.replace(/[^\d]/g, ''));
 

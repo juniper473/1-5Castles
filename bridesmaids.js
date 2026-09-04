@@ -1,6 +1,6 @@
 module.exports = async function runBridesmaids(page) {
   // =========================
-  // 🔧 CONFIG..
+  // 🔧 CONFIG
   // =========================
   const PARTY_ID = 7943;
   const TARGET_URL =

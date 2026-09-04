@@ -1,5 +1,5 @@
 // ================================================================
-// 🏠 APARTMENT INCOME.
+// 🏠 APARTMENT INCOME
 // ================================================================
 
 module.exports = async function runApartment(page) {

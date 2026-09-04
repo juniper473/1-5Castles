@@ -1,4 +1,4 @@
-// Slots.js..
+// Slots.js
 
 module.exports = async function runSlotsEvent(page) {
   const slotsUrl = process.env.LP_SLOTS_URL;
@@ -13,7 +13,7 @@ module.exports = async function runSlotsEvent(page) {
     await page.waitForTimeout(30000); // Wait 30 seconds
   }
 
-  // 🎰 Repeatedly click spin if tries and emeralds available.
+  // 🎰 Repeatedly click spin if tries and emeralds available
   while (true) {
     // 💎 Check emeralds
     const emeraldsText = await page.$eval('#player-emeralds', el => el.textContent.trim());
@@ -25,7 +25,7 @@ module.exports = async function runSlotsEvent(page) {
     }
 
     // 🎯 Check tries
-    const tries = Math.max(0, (await page.$$eval('.currency-circle-full', spans => spans.length)));
+    const tries = Math.max(0, (await page.$$eval('.currency-circle-full', spans => spans.length)) - 1);
     if (tries === 0) {
       console.log("🎯 No tries left. Exiting.");
       break;

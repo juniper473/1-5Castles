@@ -18,7 +18,7 @@ module.exports = async function runPetTraining(page) {
     const petIdNumber = petId.replace('pet', '');
     console.log(`🐶 Active pet detected. Pet ID: ${petIdNumber}`);
 
-    // 🔍 STEP 2: Check cooldown (diamond bypass safety).
+    // 🔍 STEP 2: Check cooldown (diamond bypass safety)
     const cooldownInfo = await activePet.evaluate(pet => {
       const button = pet.querySelector('#trainPet');
       const cooldownBar = pet.querySelector('#trainingCooldown');

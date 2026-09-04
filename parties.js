@@ -14,7 +14,7 @@ module.exports = async function runParties(page) {
 
   // ============================================================
   // STEP 1
-  // Navigate to Party Center.
+  // Navigate to Party Center
   // ============================================================
 
   await page.goto(PARTY_CENTER_URL, {
